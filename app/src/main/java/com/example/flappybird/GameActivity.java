@@ -201,6 +201,7 @@ public class GameActivity extends AppCompatActivity {
 
         boolean isGetVoiceRun;
 
+
         Object mLock;
 
         public AudioRecorder() {
