@@ -1,30 +1,38 @@
 package com.example.flappybird;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
+import com.example.flappybird.base.Constant;
+import com.example.flappybird.base.SharedPreference;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends AppCompatActivity {
+public class GameFriendActivity extends AppCompatActivity {
 
     private GameView gameView;
     private TextView textViewScore;
@@ -48,6 +56,8 @@ public class GameActivity extends AppCompatActivity {
     private static final int TOUCH_MODE = 0x00;
     private static final int VOICE_MODE = 0x01;
 
+    private double latLocation = 0L;
+    private double longLocation = 0L;
     private Timer timer;
 
     @SuppressLint("HandlerLeak")
@@ -76,15 +86,15 @@ public class GameActivity extends AppCompatActivity {
                             audioRecorder = null;
                             System.gc();
                         }
-                        new DialogEndGame(GameActivity.this, "Score: " + gameView.getScore(), new DialogEndGame.OnEventView() {
+                        new DialogEndGame(GameFriendActivity.this, "Score: " + gameView.getScore(), new DialogEndGame.OnEventView() {
                             @Override
                             public void OnCancel() {
-                                GameActivity.this.onBackPressed();
+                                GameFriendActivity.this.onBackPressed();
                             }
 
                             @Override
                             public void OnRestart() {
-                                GameActivity.this.restartGame();
+                                GameFriendActivity.this.restartGame();
                             }
                         }).show();
                     }
@@ -109,6 +119,9 @@ public class GameActivity extends AppCompatActivity {
     private static final int UPDATE = 0x00;
     private static final int RESET_SCORE = 0x01;
 
+    ArrayList<User> usersArrayList = new ArrayList<User>();
+    SharedPreference sharedPreference;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,9 +131,10 @@ public class GameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_game_near_friend);
+        sharedPreference = new SharedPreference(getApplicationContext());
 
-        // Initialize the private views
+        initNearFriend();
         initViews();
 
         // Initialize the MediaPlayer
@@ -150,7 +164,12 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         });
-        setNewTimerThread.start();
+        if (sharedPreference.getBoolean(Constant.FirstPlay, false)) {
+            initNewUsers();
+        } else {
+            startGame();
+
+        }
 
         if (gameMode == TOUCH_MODE) {
             // Jump listener
@@ -176,6 +195,80 @@ public class GameActivity extends AppCompatActivity {
             audioRecorder = new AudioRecorder();
             audioRecorder.getNoiseLevel();
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void startGame() {
+
+        // Initialize the private views
+        setNewTimerThread.start();
+
+    }
+
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    private void initNewUsers() {
+        new DialogNewPlayer(this, new DialogNewPlayer.OnEventView() {
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onSave(String s) {
+                String id = firestore.collection(Constant.UserPlay).document().getId();
+                User us = new User(id, longLocation, latLocation, 0, s);
+                firestore.collection(Constant.UserPlay).document(id).set(us)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                sharedPreference.putBoolean(Constant.FirstPlay, false);
+                                sharedPreference.putString("UsID", id);
+                                startGame();
+                            }
+
+                        }).addOnFailureListener(e -> showToast(e.getMessage()));
+            }
+        }).show();
+    }
+
+    private void showToast(Object mess) {
+        Toast.makeText(getApplicationContext(), "" + mess, Toast.LENGTH_LONG).show();
+    }
+
+    int LOCATION_PERMISSION_REQUEST_CODE = 10000;
+
+    private void initNearFriend() {
+
+
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE
+            );
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        longLocation = location.getLongitude();
+                        latLocation = location.getLatitude();
+                    } else {
+                        showToast("Last location is null");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        showToast(e.getMessage());
+                        Log.d("Error", "ERRVAL: " + e.getMessage());
+                    }
+                });
+
+
     }
 
     private class AudioRecorder {
@@ -229,7 +322,7 @@ public class GameActivity extends AppCompatActivity {
 
                     // Jump if the volume is loud enough
                     if (volume > volumeThreshold) {
-                        GameActivity.this.gameView.jump();
+                        GameFriendActivity.this.gameView.jump();
                         Log.i(TAG, "分贝值: " + volume + "超过了");
                     }
 
@@ -250,8 +343,9 @@ public class GameActivity extends AppCompatActivity {
 
     private void initViews() {
         gameView = findViewById(R.id.game_view);
-        textViewScore = findViewById(R.id.text_view_score);
+        textViewScore = findViewById(R.id.text_view_score_fiend);
     }
+
     private void setNewTimer() {
         if (!isSetNewTimerThreadEnabled) {
             return;
@@ -263,7 +357,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Send the message to the handler to update the UI of the GameView
-                GameActivity.this.handler.sendEmptyMessage(UPDATE);
+                GameFriendActivity.this.handler.sendEmptyMessage(UPDATE);
 
                 // For garbage collection
                 System.gc();

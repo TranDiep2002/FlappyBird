@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:layout_centerInParent="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_starting"
     android:layout_width="match_parent"
@@ -16,23 +17,42 @@
         android:layout_marginTop="100dp"
         android:src="@drawable/ic_title" />
 
-    <!-- The two buttons -->
     <LinearLayout
+        android:paddingHorizontal="@dimen/_40sdp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/title"
         android:layout_marginTop="100dp">
 
         <Button
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:textAllCaps="false"
-            android:text="Touch Control"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="Start"
             android:onClick="goToTouchActivity" />
 
+
+
         <Button
-            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="Play with firend"
+            android:onClick="playNearFriend" />
+
+
+
+        <Button
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:textAllCaps="false"
@@ -41,14 +61,17 @@
 
     </LinearLayout>
 
-    <!-- The FloatingActionButton to adjust the threshold of the voice -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_volume_24dp"
-        android:onClick="adjustVolumeThreshold" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="adjustVolumeThreshold"
+        android:src="@drawable/ic_volume_24dp" />
 
 </RelativeLayout>

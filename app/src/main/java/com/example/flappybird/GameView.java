@@ -247,6 +247,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             ((GameActivity) context).updateScore(getScore());
                             ((GameActivity) context).playScoreMusic();
                         }
+                        if (context instanceof GameFriendActivity) {
+                            ((GameFriendActivity) context).updateScore(getScore());
+                            ((GameFriendActivity) context).playScoreMusic();
+                        }
                     }
                 }
             }

@@ -29,32 +29,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_6sdp"
-                android:text="Game Over"
+                android:text="New Player"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
 
-        <TextView
+        <EditText
             android:layout_marginTop="@dimen/_12sdp"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_gravity="center"
-            android:id="@+id/txtContent"
-            android:textStyle="bold"
-            android:text="Would you like to RESTART?"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/edtName"
+            android:padding="@dimen/_6sdp"
+            android:textSize="@dimen/_14sdp"
+            android:backgroundTint="#F1F0F0"
+            android:hint="Enter new name"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13sdp" />
-        <TextView
-            android:layout_marginTop="@dimen/_4sdp"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_gravity="center"
-            android:text="Would you like to RESTART?"
+            android:background="@drawable/button_app_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_13sdp" />
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:weightSum="2"
@@ -96,7 +87,7 @@
                 android:background="@drawable/button_app_background"
                 android:paddingHorizontal="@dimen/_8sdp"
                 android:paddingTop="@dimen/_2sdp"
-                android:text="Restart"
+                android:text="Save"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/_13sdp" />
