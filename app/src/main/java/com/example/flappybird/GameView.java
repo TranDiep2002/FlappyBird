@@ -104,7 +104,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setAntiAlias(true);
 
         // For the bird
-        bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.ic_bird);
+        bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird);
         bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
 
         // For the pipes
