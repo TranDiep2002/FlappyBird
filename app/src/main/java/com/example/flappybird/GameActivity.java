@@ -1,5 +1,6 @@
 package com.example.flappybird;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
@@ -49,7 +50,9 @@ public class GameActivity extends AppCompatActivity {
 
     private Timer timer;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
+        @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(Message message) {
             switch (message.what) {
@@ -74,24 +77,17 @@ public class GameActivity extends AppCompatActivity {
                             System.gc();
                         }
 
-                        alertDialog = new AlertDialog.Builder(GameActivity.this);
-                        alertDialog.setTitle("GAME OVER");
-                        alertDialog.setMessage("Score: " + String.valueOf(gameView.getScore()) +
-                                "\n" + "Would you like to RESTART?");
-                        alertDialog.setCancelable(false);
-                        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        new DialogEndGame(GameActivity.this, "Score: " + gameView.getScore(), new DialogEndGame.OnEventView() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GameActivity.this.restartGame();
-                            }
-                        });
-                        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void OnCancel() {
                                 GameActivity.this.onBackPressed();
                             }
-                        });
-                        alertDialog.show();
+
+                            @Override
+                            public void OnRestart() {
+                                GameActivity.this.restartGame();
+                            }
+                        }).show();
                     }
 
                     break;
