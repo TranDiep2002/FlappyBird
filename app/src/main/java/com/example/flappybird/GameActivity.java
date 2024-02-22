@@ -76,7 +76,6 @@ public class GameActivity extends AppCompatActivity {
                             audioRecorder = null;
                             System.gc();
                         }
-
                         new DialogEndGame(GameActivity.this, "Score: " + gameView.getScore(), new DialogEndGame.OnEventView() {
                             @Override
                             public void OnCancel() {
