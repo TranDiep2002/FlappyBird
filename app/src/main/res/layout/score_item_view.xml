@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@drawable/button_app_background"
+    android:backgroundTint="#35000000"
+    android:layout_marginTop="@dimen/_2sdp"
     android:padding="@dimen/_3ssp"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/_20ssp"
-        android:layout_height="@dimen/_20sdp"
+        android:layout_width="@dimen/_16ssp"
+        android:layout_height="@dimen/_16sdp"
         android:src="@drawable/img_bird"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textAlignment="textEnd"
         android:id="@+id/txtScore"
         android:layout_width="80sp"
         android:layout_height="wrap_content"

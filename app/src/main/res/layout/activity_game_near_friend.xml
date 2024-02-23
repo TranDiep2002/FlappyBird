@@ -5,10 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <SurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/game_background" />
+
+
 
     <!-- The GameView -->
     <com.example.flappybird.GameView
@@ -44,15 +47,13 @@
             android:textColor="#ffff"
             android:textSize="@dimen/_20sdp" />
     </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:backgroundTint="@color/white"
-        android:background="@color/white"
         android:id="@+id/rcvFiendNear"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
+        android:layout_margin="@dimen/_12sdp"
         android:layout_width="@dimen/_120sdp"
         android:layout_height="@dimen/_120sdp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

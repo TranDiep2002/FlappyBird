@@ -9,14 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.flappybird.databinding.ScoreItemViewBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
 
-    final ArrayList<User> users;
+  private   List<User> users= new ArrayList<>();
 
-    public ScoreAdapter(ArrayList<User> users) {
-        this.users = users;
-    }
 
     @NonNull
     @Override
@@ -45,5 +43,10 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
             binding.txtName.setText(users.UserName);
             binding.txtScore.setText(""+users.Score);
         }
+    }
+
+    public void setData(List<User> users){
+        this.users=users;
+        notifyDataSetChanged();
     }
 }
