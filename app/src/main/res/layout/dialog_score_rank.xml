@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="@dimen/_12sdp">
-
+    app:cardCornerRadius="@dimen/_5sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:padding="@dimen/_10sdp"
+        android:gravity="center"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/_12sdp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
             <ImageView
                 android:layout_width="@dimen/_32sdp"
@@ -29,17 +30,45 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_6sdp"
-                android:text="Game Over"
+                android:text="@string/game_over"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/animation_view"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            app:layout_constraintStart_toStartOf="parent"
+          />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvFiendNear"
+            android:visibility="gone"
+            android:layout_margin="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_gravity="center"
             android:id="@+id/txtContent"
+            android:textStyle="bold"
+            android:text="Would you like to RESTART?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp" />
+        <TextView
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_gravity="center"
+            android:id="@+id/txtScore"
             android:textStyle="bold"
             android:text="Would you like to RESTART?"
             android:layout_width="match_parent"
@@ -105,7 +134,5 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

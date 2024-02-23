@@ -109,6 +109,7 @@ public class GameActivity extends AppCompatActivity {
     private static final int UPDATE = 0x00;
     private static final int RESET_SCORE = 0x01;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,18 +138,15 @@ public class GameActivity extends AppCompatActivity {
 
         // Set the Timer
         isSetNewTimerThreadEnabled = true;
-        setNewTimerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Sleep for 3 seconds for the Surface to initialize
-                    Thread.sleep(3000);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                } finally {
-                    if (isSetNewTimerThreadEnabled) {
-                        setNewTimer();
-                    }
+        setNewTimerThread = new Thread(() -> {
+            try {
+                // Sleep for 3 seconds for the Surface to initialize
+                Thread.sleep(3000);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            } finally {
+                if (isSetNewTimerThreadEnabled) {
+                    setNewTimer();
                 }
             }
         });
@@ -156,26 +154,23 @@ public class GameActivity extends AppCompatActivity {
 
         if (gameMode == TOUCH_MODE) {
             // Jump listener
-            gameView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            gameView.jump();
+            gameView.setOnTouchListener((view, motionEvent) -> {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        gameView.jump();
 
-                            break;
+                        break;
 
-                        case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_UP:
 
 
-                            break;
+                        break;
 
-                        default:
-                            break;
-                    }
-
-                    return true;
+                    default:
+                        break;
                 }
+
+                return true;
             });
         } else {
             audioRecorder = new AudioRecorder();
@@ -208,13 +203,6 @@ public class GameActivity extends AppCompatActivity {
                 return;
             }
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
@@ -225,44 +213,37 @@ public class GameActivity extends AppCompatActivity {
             }
             isGetVoiceRun = true;
 
-            new Thread(new Runnable() {
+            new Thread(() -> {
+                mAudioRecord.startRecording();
+                short[] buffer = new short[BUFFER_SIZE];
+                while (isGetVoiceRun) {
+                    int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
+                    long v = 0;
+                    // 将 buffer 内容取出，进行平方和运算
+                    for (int i = 0; i < buffer.length; i++) {
+                        v += buffer[i] * buffer[i];
+                    }
+                    double mean = v / (double) r;
+                    double volume = 10 * Math.log10(mean);
+                    Log.i(TAG, "分贝值:" + volume);
 
-                @Override
-                public void run() {
-                    mAudioRecord.startRecording();
-                    short[] buffer = new short[BUFFER_SIZE];
-                    while (isGetVoiceRun) {
-                        // r是实际读取的数据长度，一般而言r会小于buffersize
-                        int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
-                        long v = 0;
-                        // 将 buffer 内容取出，进行平方和运算
-                        for (int i = 0; i < buffer.length; i++) {
-                            v += buffer[i] * buffer[i];
-                        }
-                        // 平方和除以数据总长度，得到音量大小。
-                        double mean = v / (double) r;
-                        double volume = 10 * Math.log10(mean);
-                        Log.i(TAG, "分贝值:" + volume);
+                    // Jump if the volume is loud enough
+                    if (volume > volumeThreshold) {
+                        GameActivity.this.gameView.jump();
+                        Log.i(TAG, "分贝值: " + volume + "超过了");
+                    }
 
-                        // Jump if the volume is loud enough
-                        if (volume > volumeThreshold) {
-                            GameActivity.this.gameView.jump();
-                            Log.i(TAG, "分贝值: " + volume + "超过了");
-                        }
-
-                        synchronized (mLock) {
-                            try {
-                                mLock.wait(17);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    synchronized (mLock) {
+                        try {
+                            mLock.wait(17);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
-                    mAudioRecord.stop();
-                    mAudioRecord.release();
-                    mAudioRecord = null;
                 }
-
+                mAudioRecord.stop();
+                mAudioRecord.release();
+                mAudioRecord = null;
             }).start();
         }
     }
@@ -271,10 +252,6 @@ public class GameActivity extends AppCompatActivity {
         gameView = findViewById(R.id.game_view);
         textViewScore = findViewById(R.id.text_view_score);
     }
-
-    /**
-     * Sets the Timer to update the UI of the GameView.
-     */
     private void setNewTimer() {
         if (!isSetNewTimerThreadEnabled) {
             return;

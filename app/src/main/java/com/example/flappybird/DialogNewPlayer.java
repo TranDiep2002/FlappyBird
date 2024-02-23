@@ -4,31 +4,30 @@ import android.content.Context;
 
 import com.example.flappybird.base.BaseDialog;
 import com.example.flappybird.databinding.DialogEndGameBinding;
+import com.example.flappybird.databinding.DialogInitUserBinding;
 
-public class DialogEndGame extends BaseDialog<DialogEndGameBinding> {
+public class DialogNewPlayer extends BaseDialog<DialogInitUserBinding> {
 
-    public DialogEndGame(Context context, String message, OnEventView eventView) {
+    public DialogNewPlayer(Context context, OnEventView eventView) {
         super(context);
-        DialogEndGameBinding binding = DialogEndGameBinding.inflate(getLayoutInflater());
+        DialogInitUserBinding binding = DialogInitUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setCancelable(false);
 
-        binding.txtContent.setText(message);
-
         binding.bntCancel.setOnClickListener(v -> {
-            eventView.OnCancel();
+            eventView.onCancel();
             dismiss();
         });
         binding.btnSave.setOnClickListener(v -> {
-            eventView.OnRestart();
+            eventView.onSave(binding.edtName.getText().toString());
             dismiss();
         });
 
     }
 
     public interface OnEventView {
-        void OnCancel();
+        void onCancel();
 
-        void OnRestart();
+        void onSave(String s);
     }
 }

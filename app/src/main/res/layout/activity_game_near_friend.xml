@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_touch"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <SurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/game_background" />
+
+
 
     <!-- The GameView -->
     <com.example.flappybird.GameView
@@ -18,27 +22,38 @@
     <!-- The TextView to display the score -->
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginVertical="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_12sdp"
             android:background="#00000000"
             android:text="Score:"
             android:textColor="#fff"
             android:textSize="@dimen/_20sdp" />
 
-        <TextView android:layout_marginStart="@dimen/_6sdp"
-            android:id="@+id/text_view_score"
+        <TextView
+            android:id="@+id/text_view_score_fiend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_6sdp"
             android:background="#00000000"
             android:text="0"
             android:textColor="#ffff"
             android:textSize="@dimen/_20sdp" />
     </LinearLayout>
-
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvFiendNear"
+        android:layout_margin="@dimen/_12sdp"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

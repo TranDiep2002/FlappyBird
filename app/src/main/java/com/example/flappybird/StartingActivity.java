@@ -47,28 +47,6 @@ public class StartingActivity extends AppCompatActivity {
             );
         }
 
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            location.getLongitude(); location.getLatitude();
-                        } else {
-                            showToast("Last location is null");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure( Exception e) {
-                        showToast(e.getMessage());
-                        Log.d("Error", "ERRVAL: " + e.getMessage());
-                    }
-                });
-
-
-
         // lay toa do dien thoai luu A(x,y) B(x,Y)
 
         // Hide the status bar
@@ -87,6 +65,11 @@ public class StartingActivity extends AppCompatActivity {
 
     public void goToTouchActivity(View view) {
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("Mode", "Touch");
+        startActivity(intent);
+    }
+    public void playNearFriend(View v){
+        Intent intent = new Intent(this, GameFriendActivity.class);
         intent.putExtra("Mode", "Touch");
         startActivity(intent);
     }
