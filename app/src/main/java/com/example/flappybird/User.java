@@ -41,12 +41,8 @@ public class User implements Serializable {
     }
     public List<User> getNearestUsers(double myLat, double myLong, List<User> allUsers) {
         List<User> nearestUsers = new ArrayList<>(allUsers);
-
-        // Sort users based on their distance from the given location
         Collections.sort(nearestUsers, Comparator.comparingDouble(user ->
                 distance(myLat, myLong, user.LatLocation, user.LongLocation)));
-
-        // Return the nearest 20 users
         return nearestUsers.subList(0, Math.min(20, nearestUsers.size()));
     }
 }

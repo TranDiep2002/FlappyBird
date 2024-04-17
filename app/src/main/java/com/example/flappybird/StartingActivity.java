@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -59,8 +60,8 @@ public class StartingActivity extends AppCompatActivity {
     }
 
 
-    private void showToast(Object mess){
-        Toast.makeText(getApplicationContext(),""+mess,Toast.LENGTH_LONG).show();
+    private void showToast(Object mess) {
+        Toast.makeText(getApplicationContext(), "" + mess, Toast.LENGTH_LONG).show();
     }
 
     public void goToTouchActivity(View view) {
@@ -68,7 +69,8 @@ public class StartingActivity extends AppCompatActivity {
         intent.putExtra("Mode", "Touch");
         startActivity(intent);
     }
-    public void playNearFriend(View v){
+
+    public void playNearFriend(View v) {
         Intent intent = new Intent(this, GameFriendActivity.class);
         intent.putExtra("Mode", "Touch");
         startActivity(intent);
@@ -78,7 +80,7 @@ public class StartingActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.RECORD_AUDIO },
+                    new String[]{Manifest.permission.RECORD_AUDIO},
                     RECORD_AUDIO_PERMISSION_REQUEST_CODE);
         } else {
             Intent intent = new Intent(this, GameActivity.class);

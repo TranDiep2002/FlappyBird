@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -17,8 +18,12 @@
         android:theme="@style/Theme.FlappyBird"
         tools:targetApi="31">
         <activity
+            android:name=".TestActivity"
+            android:exported="true" />
+        <activity
             android:name=".StartingActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,8 +31,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity" />
-        <activity android:windowSoftInputMode="adjustResize" android:name=".GameFriendActivity" android:exported="true" />
-
+        <activity
+            android:name=".GameFriendActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
