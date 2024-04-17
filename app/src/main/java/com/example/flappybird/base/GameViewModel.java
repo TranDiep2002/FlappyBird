@@ -11,4 +11,7 @@ public class GameViewModel extends ViewModel {
    public MutableLiveData<User> userLogin = new MutableLiveData<>(null);
   public   MutableLiveData<ArrayList<User>> usersArrayList = new MutableLiveData<>();
 
+
+  public MutableLiveData<String> dataTest= new MutableLiveData<>("");
+
 }

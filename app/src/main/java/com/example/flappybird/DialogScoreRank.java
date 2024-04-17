@@ -25,6 +25,9 @@ public class DialogScoreRank extends BaseDialog<DialogScoreRankBinding> {
         DialogScoreRankBinding binding = DialogScoreRankBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setCancelable(false);
+
+
+
         adapter = new ScoreAdapter();
         Glide.with(binding.getRoot()).load(R.raw.animate).into(binding.animationView);
         new Handler(Looper.myLooper()).postDelayed(() -> {
@@ -37,9 +40,10 @@ public class DialogScoreRank extends BaseDialog<DialogScoreRankBinding> {
                 us.MaxScore = us.Score;
             }
         }
-        Collections.sort(users, Comparator.comparingInt(o -> -o.MaxScore));
 
-        for (i = 0; i < users.size()-1; i++) {
+        Collections.sort(users, (o1, o2) -> Integer.compare(o2.MaxScore,o1.MaxScore));
+
+        for (i = 0; i < users.size(); i++) {
             if (users.get(i).Id .equals(preference.getString("UsID", ""))) {
                 binding.txtContent.setText("Your rank:" + (i+1));
                 binding.txtScore.setText("Total score: " + users.get(i).Score);

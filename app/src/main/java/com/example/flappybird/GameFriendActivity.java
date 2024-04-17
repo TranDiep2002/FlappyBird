@@ -149,7 +149,7 @@ public class GameFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_near_friend);
         sharedPreference = new SharedPreference(getApplicationContext());
         viewModel = new ViewModelProvider(this).get(GameViewModel.class);
-
+// lay log va lat dia chi
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
@@ -251,11 +251,18 @@ public class GameFriendActivity extends AppCompatActivity {
 
 
     private void getUsers(Consumer<User> us) {
-        firestore.collection(Constant.UserPlay).document(sharedPreference.getString("UsID", "")).get().addOnFailureListener(e -> {
-            us.accept(null);
-        }).addOnSuccessListener(documentSnapshot -> {
-            us.accept(documentSnapshot.toObject(User.class));
-        });
+        String uid=sharedPreference.getString("UsID", "");
+        if(uid.equals("")){
+            initNewUsers();
+        }
+        else {
+            firestore.collection(Constant.UserPlay).document(uid).get().addOnFailureListener(e -> {
+                us.accept(null);
+            }).addOnSuccessListener(documentSnapshot -> {
+                us.accept(documentSnapshot.toObject(User.class));
+            });
+        }
+
     }
 
 
@@ -272,7 +279,6 @@ public class GameFriendActivity extends AppCompatActivity {
             @Override
             public void onSave(String s) {
                 String id = firestore.collection(Constant.UserPlay).document().getId();
-                // User us = new User(id, getLocation(longLocation,count),getLocation(latLocation,count), 0, "Users"+count);
                 User us = new User(id, longLocation, latLocation, 0, 0, s);
                 firestore.collection(Constant.UserPlay).document(id).set(us).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -288,18 +294,6 @@ public class GameFriendActivity extends AppCompatActivity {
 
 
     }
-
-    private double getLocation(double locat, int count) {
-        double result = 0.0;
-        String toStr = "" + locat;
-
-        String locationStrSub = toStr.substring(0, toStr.length() - String.valueOf(count).length());
-
-        String newLoc = locationStrSub + ("" + count);
-        result = Double.parseDouble(newLoc);
-        return result;
-    }
-
     private void showToast(Object mess) {
         Toast.makeText(getApplicationContext(), "" + mess, Toast.LENGTH_LONG).show();
     }
@@ -317,7 +311,12 @@ public class GameFriendActivity extends AppCompatActivity {
                 User us = documentSnapshot.toObject(User.class);
                 users.add(us);
             }
-            Collections.sort(users, Comparator.comparingInt(o -> -o.MaxScore));
+            Collections.sort(users, new Comparator<User>() {
+                @Override
+                public int compare(User o1, User o2) {
+                    return Integer.compare(o1.MaxScore,o2.MaxScore);
+                }
+            });
             scoreAdapter.setData(users);
             viewModel.usersArrayList.postValue(users);
         });
@@ -458,7 +457,6 @@ public class GameFriendActivity extends AppCompatActivity {
                 break;
             }
         }
-
         scoreAdapter.setData(users);
     }
 
