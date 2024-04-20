@@ -59,6 +59,15 @@
             android:text="Voice Control"
             android:onClick="goToVoiceActivity" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_weight="1.0"
+            android:onClick="goToRankAward"
+            android:text="Rank award"
+            android:textAllCaps="false" />
+
     </LinearLayout>
 
 

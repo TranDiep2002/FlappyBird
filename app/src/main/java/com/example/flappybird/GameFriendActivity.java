@@ -215,7 +215,6 @@ public class GameFriendActivity extends AppCompatActivity {
             volumeThreshold = getIntent().getIntExtra("VolumeThreshold", 50);
         }
 
-
         if (gameMode == TOUCH_MODE) {
 
             gameView.setOnTouchListener((view, motionEvent) -> {
@@ -314,7 +313,7 @@ public class GameFriendActivity extends AppCompatActivity {
             Collections.sort(users, new Comparator<User>() {
                 @Override
                 public int compare(User o1, User o2) {
-                    return Integer.compare(o1.MaxScore,o2.MaxScore);
+                    return Integer.compare(o2.MaxScore,o1.MaxScore);
                 }
             });
             scoreAdapter.setData(users);

@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/_16ssp"
-        android:layout_height="@dimen/_16sdp"
+        android:layout_width="@dimen/_20ssp"
+        android:layout_height="@dimen/_20sdp"
         android:src="@drawable/img_bird"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,6 +21,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="Name"
         android:id="@+id/txtName"
         android:textColor="@color/white"

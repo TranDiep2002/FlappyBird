@@ -41,7 +41,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHol
         }
         public void onBind(User users){
             binding.txtName.setText(users.UserName);
-            binding.txtScore.setText(""+users.Score);
+            binding.txtScore.setText(""+users.MaxScore);
         }
     }
 

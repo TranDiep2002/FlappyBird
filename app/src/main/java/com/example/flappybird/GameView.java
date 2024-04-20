@@ -58,7 +58,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private static final float base = 100.0f;
     private float pipeWidth = 100.0f;
     private List<Pipe> pipeList;
-    private static final float pipeVelocity = 3.0f;
+    private static final float pipeVelocity = 4.0f;
 
     public GameView(Context context) {
         super(context);
