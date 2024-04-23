@@ -5,23 +5,29 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback , SensorEventListener {
 
     private float measuredWidth;
 
@@ -87,10 +93,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        // Lấy đối tượng SensorManager
+        SensorManager sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
+
+        // Đăng ký lắng nghe cảm biến gia tốc
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometerSensor != null) {
+            sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        // Lấy đối tượng SensorManager
+        SensorManager sensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
+
+        // Hủy đăng ký lắng nghe cảm biến gia tốc
+        sensorManager.unregisterListener(this);
     }
 
     private void init() {
@@ -325,4 +344,70 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 base + (measuredHeight - 2 * base - gap) * new Random().nextFloat()));
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+//        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//        // Lấy đối tượng WindowManager
+//        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+//
+//        // Kiểm tra trạng thái xoay của màn hình
+//        int rotation = windowManager.getDefaultDisplay().getRotation();
+//
+//        // Xác định trạng thái xoay ngang hoặc xoay ngược của thiết bị
+//        if (rotation == Surface.ROTATION_180 || rotation == Surface.ROTATION_270) {
+//            // Màn hình đang xoay ngược
+//            // Thực hiện việc đổi ảnh chim tại đây khi màn hình bị xoay ngược
+//            // Ví dụ: bird.setImageBitmap(newBitmap);
+//            bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.bird_nguoc);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+//        } else {
+//            // Màn hình không bị xoay ngược
+//            // Thực hiện các thao tác khác tại đây khi màn hình không bị xoay ngược
+//            bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird);
+//            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+//        }
+//            // Yêu cầu vẽ lại GameView
+//            //invalidate();
+//            // Cập nhật lại giao diện người dùng
+//            update();
+//    }
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+
+            if (Math.abs(x) > Math.abs(y)) {
+                if (x < 0) {
+                    // Thiết bị đang ở chế độ xoay ngang ngược
+                    bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird_nguoc);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                } else {
+                    // Thiết bị đang ở chế độ xoay ngang bình thường
+                    bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                }
+            } else {
+                // Thiết bị đang ở chế độ dọc
+                if (y < 0) {
+                    // Thiết bị đang ở chế độ xoay dọc ngược
+                    bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird_nguoc);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                } else {
+                    // Thiết bị đang ở chế độ xoay dọc bình thường
+                    bitmap = getBitmapFromVectorDrawable(getContext(), R.drawable.img_bird);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                }
+            }
+
+            // Cập nhật lại giao diện người dùng
+            update();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
+
