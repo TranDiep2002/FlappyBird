@@ -90,6 +90,10 @@ public class StartingActivity extends AppCompatActivity {
         }
     }
 
+    public void goToRankAward(View view) {
+        Intent intent = new Intent(this, RankActivity.class);
+        startActivity(intent);
+    }
     @SuppressLint("MissingSuperCall")
     @Override
     public void onRequestPermissionsResult(int requestCode,
